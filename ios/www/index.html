@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <script src="js/source-sans-pro.js"></script>
+        <link rel="stylesheet" href="css/foundation.min.css">
+        <link rel="stylesheet" href="css/styles.css"/>
+        <link rel="stylesheet" href="css/app.css"/>
+        <link rel="stylesheet" type="text/css" href="css/transition.css" />
+        <title>Hello World</title>
+    </head>
+    <body>
+
+        <div id="container"></div>
+        <div class="bottom-bar">
+            <ul>
+              <li><a id="home-tab" class="active" href="#home"><img src="images/home-ico.png"></a></li>
+              <li><a id="directory-tab" href="#directory"><img src="images/directory-ico.png"></a></li>
+              <li><a id="games-tab" href="#games"><img src="images/games-ico.png"></a></li>
+            </ul>
+        </div>
+
+        <script id="main-tpl" type="text/x-handlebars-template">
+          <div class="wrapper">
+
+            <div class="row homeImage">
+                  <img src="images/home-banner.jpg">
+            </div>
+
+            <section id="mainContent" class="menuhome">
+              <div class="row">
+                <div class="twelve columns">
+                    <a href="#whatson">
+                      <div class="button secondary radius">
+                        <span class="ico-btn"><img src="images/whats-on-ico.png"/></span>
+                          WHATS ON
+                        <span class="ico-arrow"><img src="images/arrow-button-home.png"/></span></div>
+                    </a>
+                    <a href="#promo">
+                      <div class="button secondary radius">
+                        <span class="ico-btn"><img src="images/promotion-ico.png"/></span>
+                          PROMOTION
+                        <span class="ico-arrow"><img src="images/arrow-button-home.png"/></span></div>
+                    </a>
+                    <a href="#about">
+                      <div class="button secondary radius">
+                        <span class="ico-btn"><img src="images/about-ico.png"/></span>
+                          ABOUT US
+                        <span class="ico-arrow"><img src="images/arrow-button-home.png"/></span>
+                      </div>
+                    </a>
+                </div>
+              </div>
+            </section>
+          </div>
+        </script>
+
+        <script id="feed-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                    <p>{{title}}</p>
+                    <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                </header>
+                <section id="mainContent" class="inner-content">
+                    <div class="row">
+                        <div class="twelve columns">
+                            <img src="images/img-inner-sample.jpg">
+                            <div class="list-container">
+                                {{#each feeds}}
+                                  <div class="list-item clearfix">
+                                    <a href="#ondetail/{{this.id}}">
+                                      <img src="images/img-list-1.jpg">
+                                     <p class="title-list">{{this.title}}</p>
+                                      <p>{{this.short}}</p>
+                                    </a>
+                                  </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </script>
+
+        <script id="article-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                <p>{{title}}</p>
+                <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                </header>
+                <section id="mainContent" class="inner-content">
+                    <div class="row">
+                    <div class="twelve columns">
+                        <img src="images/img-content-sample.jpg">
+                        <div class="detail-container">
+                          <h4>{{title}}</h4>
+                          <p>{{body}}</p>
+                          <p><a id="fb-btn" href="#"><img src="images/fb-btn.gif"/></a><a href="#"><img src="images/twitter-btn.gif"/></a></p>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </script>
+
+        <script id="static-tpl" type="text/x-handlebars-template">
+          <div class="wrapper">
+            <header class="inner">
+              <p>{{title}}</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+              <div id="mainContent" class="inner-content">
+                <div class="row">
+                  <div class="twelve columns">
+                    {{body}}
+                  </div>
+                </div>
+              </div>
+          </div>
+        </script>
+
+        <script id="old-home-tpl" type="text/x-handlebars-template">
+            <div class='header'><h1>Home</h1></div>
+            <div class='search-bar'><input class='search-key' type="text"/></div>
+            <div class='scroll' ><ul class='employee-list'></ul></div>
+        </script>
+
+        <script id="old-home-li-tpl" type="text/x-handlebars-template">
+            {{#.}}
+            <li><a href="#employees/{{this.id}}">{{this.firstName}} {{this.lastName}}<br/>{{this.title}}</a></li>
+            {{/.}}
+        </script>
+
+        <script id="detail-tpl" type="text/x-handlebars-template">
+            <div class='header'><a href='#' class="button header-button header-button-left">Back</a><h1>Details</h1></div>
+            <div class='details'>
+                <img id='image' src='img/{{firstName}}_{{lastName}}.jpg' style="float:left;margin:10px;"/>
+                <h1>{{firstName}} {{lastName}}</h1>
+                <h2>{{title}}</h2>
+                <ul>
+                    <li><a href="tel:{{officePhone}}">Call Office<br/>{{officePhone}}</a></li>
+                    <li><a href="tel:{{cellPhone}}">Call Cell<br/>{{cellPhone}}</a></li>
+                    <li><a href="sms:{{cellPhone}}">SMS<br/>{{cellPhone}}</a></li>
+                </ul>
+            </div>
+        </script>        
+
+        <script id="dir-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                    <p>DIRECTORY</p>
+                </header>
+                    <div class="wrapListContact">
+                      <div class="searchbar">
+                          <form action="games-land.html">
+                            <input type="text" placeholder="search here..." class="search-key" />
+                          </form>
+                          <ul class="button-group even four-up radius sortDirectoryContainer">
+                              <li class="sortby">Sort by:</li>
+                              <li><a href="#" class="button small">Alphabeth</a></li>
+                              <li><a href="#" class="button small secondary">Floor</a></li>
+                              <li><a href="#" class="button small secondary">Category</a></li>
+                          </ul>
+                      </div>
+                      <div class="twelve columns">
+                      <ul class="button-group even three-up radius wrapperTable">
+                              <li class="button small secondary storeHead">STORE</li>
+                              <li class="button small secondary">PHONE</li>
+                              <li class="button small secondary">FLOOR</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <section id="mainContent" class="inner-content games">
+                    <div class="row">
+                        <!--startslider-->
+                        <div id="slider" class="inner-content">
+                            <div class="slider-content">
+                                <ul class="shop-list">
+                                </ul>
+                            </div>
+                        </div>
+                        <!--endslider-->
+                      </div>
+                    </section>
+            </div>
+        </script>
+
+        <script id="dir-li-tpl" type="text/x-handlebars-template">
+            {{#.}}
+            <li><a href="/"><span class="storeName">{{this.shopname}}</span><span class="storePhone">{{this.phone}}</span><span class="storeFloor">{{this.floor}}</span></a></li>
+            {{/.}}
+        </script>
+
+        <script id="games-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+            <header class="inner">
+              <p>GAMES</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+            <section id="mainContent" class="inner-content games">
+              <div class="row">
+                <div class="twelve columns">
+                    <div class="notification-container">
+                      <p>Vestibulum a est sed libero scelerisque posuere a quis sapien. Donec dapibus, elit ac condimentum pretium,
+                      </p>
+                        <label>Verification Code</label>
+                        <input type="text" placeholder="" />
+                        <a href="#gameschoice">
+                            <button class="button">NEXT</button>
+                        </a>
+                    </div>
+                </div>
+              </div>
+            </section>
+            </div>
+        </script>
+
+        <script id="games-choice-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+            <header class="inner">
+              <p>GAMES</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+            <section id="mainContent" class="inner-content games">
+                  <div class="row">
+                    <div class="twelve columns">
+                      <div class="container-games-land">
+                        <div class="inside-content clearfix notif-box warning">
+                          <img src="images/warning-ico.png"/><p><span style="color:red;">Warning:</span> You only can play one game, please choose carefully!</p>
+                        </div>
+                        <div class="inside-content clearfix">
+                            <a class="ico-games-land" href="#gamestsearch"><img src="images/keycode-ico.gif"/></a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu velit vehicula dolor facilisis iaculis. In hac habitasse platea dictumst. </p>
+                        </div>
+                        <div class="inside-content clearfix">
+                            <a class="ico-games-land" href="#gameslogo"><img src="images/storeHoping-ico.gif"/></a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu velit vehicula dolor facilisis iaculis. In hac habitasse platea dictumst. Proin mollis ante sed quam eleifend malesuada. Donec imperdiet mattis</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </section>
+            </div>
+        </script>
+
+        <script id="games-logo-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+            <header class="inner">
+              <p>GAMES</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+            <section id="mainContent" class="inner-content games">
+              <div class="row">
+                <img src="images/storehoping-ico.png" style="float:right;margin-top:5px;">
+                <div class="twelve columns">
+                  <div class="container-games-land">
+                    <div class="inside-content clearfix" style="margin-bottom:10px;">
+                    </div>
+                    <div class="inside-content clearfix" style="margin-top:30px;">
+                          <ul class="block-grid five-up stepbystep">
+                            <li class="active">1</li>
+                            <li>2</li>
+                            <li>3</li>
+                            <li>4</li>
+                            <li class="last">5</li>
+                          </ul>
+                    </div>
+                    <div class="inside-content clearfix panel callout clue radius">
+                      <img src="images/info-ico.png"/>
+                      <p> Vestibulum a est sed libero scelerisque posuere a quis sapien. Donec dapibus, elit ac condimentum pretium,</p>
+                    </div>
+                    <div class="inside-content clearfix" style="margin-top:10px;">
+                      <img src="images/storehoping-ques1.jpg">
+                        <label style="font-size:11px;color:#fff;margin-top:10px;">Answer</label>
+                        <input type="text" placeholder="" />
+                        <input type="submit" class="button" value="SUBMIT" style="width: 50%;font-weight:normal;font-size:12px;margin:0 auto;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            </div>
+        </script>
+
+        <script id="games-tsearch-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+            <header class="inner">
+              <p>GAMES</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+            <section id="mainContent" class="inner-content games">
+              <div class="row">
+                <img src="images/qrcode-ico.png" style="float:right;margin-top:5px;">
+                <div class="twelve columns">
+                  <div class="container-games-land">
+                    <div class="inside-content clearfix" style="margin-bottom:5px;">
+                    </div>
+                    <div class="inside-content clearfix" style="margin-top:30px;">
+                          <ul class="block-grid five-up stepbystep">
+                            <li class="active">1</li>
+                            <li>2</li>
+                            <li>3</li>
+                            <li>4</li>
+                            <li class="last">5</li>
+                          </ul>
+                    </div>
+                    <div class="inside-content clearfix panel callout clue radius">
+                      <img src="images/info-ico.png"/>
+                      <p> Vestibulum a est sed libero scelerisque posuere a quis sapien. Donec dapibus, elit ac condimentum pretium, quam lacus mattis magna, vitae convallis magna libero a ligula.</p>
+                    </div>
+                    <div class="inside-content clearfix scannowbtn">
+                      <a href="qrcode-finish.html"><img src="images/scan-now-btn.png"></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            </div>    
+
+
+        </script>
+
+        <script id="about-tpl" type="text/x-handlebars-template">
+          <div class="wrapper">
+            <header class="inner">
+              <p>ABOUT US</p>
+              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+            </header>
+              <div id="mainContent" class="inner-content">
+                <div class="row">
+                  <div class="twelve columns">
+                      <img src="images/kc-mall.jpg">
+                      <div class="detail-container" style="text-align:left;">
+                        <h4>Mall - About</h4>
+                        <p>Discover an impressive array of well selected international and local gourmet and culinary delights from all corners of the globe to suit your palate. With its amazing selection, there are always restaurants, cafes, bars and clubs to tempt your taste buds and be entertained. Dine and Play in The Gourmet Tower will be particularly picturesque with the bustling city street and skyline. With irresistible choices from the entertainment world, Kuningan City Mall is the perfect place to enjoy in one of the latest concept pubs and clubs, or get up to date with the latest electronic gadgets, or simply watch the latest Hollywood blockbuster.</p>
+                        <p>Get in touch with your glamour side and explore a collection of international fashion brands—offering everything from career wear to weekend casuals and chic, clothing and accessories. Kuningan City Mall will also host a wide range of selective lifestyle products for both your home and office. After all the shopping, pamper yourself with your favorite massage in the spa, have your beauty treatments or keep yourself in shape with a workout in the gym.</p>
+                        <p>With its vibrant natural celebration themed surroundings and home to an impressive array of national and international retailers, providing a wide selection of merchandise and services conveniently grouped together over six floors, Kuningan City Mall sets a new standard in lifestyle and entertainment scene and destined for those who want to live life to the fullest.</p>
+                      </div>
+
+                      <img src="images/kc-office.jpg">
+                      <div class="detail-container" style="text-align:left;">
+                        <h4>Axa Tower - About</h4>
+                        <p>Soaring 31 stories above Kuningan City Superblock, AXA Tower is aimed for those who wanted to leave their mark of success. It is unsurpassed for its combination of location and architectural excellence. The premium office tower is offered in strata title ownership which instantly makes AXA Tower by Kuningan City a lucrative investment opportunity.</p>
+                        <p>Working at AXA Tower is a sheer pleasure, as tenants will find themselves immersed in success with all the advantages of maximum comforts and amenities as it is a part of a bustling retail and entertainment complex dazzling with amenities. Connect your business with the rest of the world with blazingly fast broadband internet meanwhile state-of-the-art communications system enables you to stay on top of your game.</p>
+                        <p>The unique oval shape floor plate with a high floor to ceiling space provides occupiers with great city views, abundant natural light and flexibility in design and fit out.</p>
+                      </div>
+
+                      <img src="images/kc-apartement.jpg">
+                      <div class="detail-container" style="text-align:left;">
+                        <h4>Residence - About</h4>
+                        <p>For those who is passionate about life and celebrate living at its best, Denpasar Residence is the ultimate choice of residency, the right answer for any individual who wanted to seek the sanctuary in the middle of a bustling capital with every daily needs at your doorstep. Suitable for urban family who value fine modern living.</p>
+                        <p>Combining contemporary architectural with rich Balinese ethnic and exotic cultural elements, the result is simply remarkable, a balance of modern living with a touch of nature. The twin towers of Denpasar Residence soars gracefully above Kuningan City Superblok and offers uninterrupted view of Jakarta's skyline. Each unit is meticulously designed to suit every unique individual with their inner city lifestyle.</p>
+                        <p>A tropical paradise located on top of the podium. A place where residents can unwind and relax in a resort environment. Vast greeneries, frangipani trees in Balinese thematic garden, and an infinity pool are just some of the features that will greet every resident. A quick dip in the pool after a long work out at the gym is a must. A true personal retreat at the end of any busy day
+                        <br/>
+                        <br/>
+                        <strong>KUNINGAN CITY</strong><br/>
+                        Jl. Prof Dr. Satrio Kav.18, Kuningan Setiabudi, Jakarta - 12940 | P : +62 21 5790 5555     F: +62 21 5790 4086
+                        <br/>wwww.kuningancity.com  | twitter : @kuningan_city | www.facebook.com/KuninganCity.apl</p>
+
+
+                        <p><a id="fb-btn" href="#"><img src="images/fb-btn.gif"/></a><a href="#"><img src="images/twitter-btn.gif"/></a></p>
+                      </div>
+
+                  </div>
+                </div>
+              </div>
+          </div>
+
+        </script>
+
+        <script type="text/javascript" src="cordova-2.2.0.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.min.js"></script>
+        <script type="text/javascript" src="js/lib/handlebars.js"></script>
+        <script src="js/storage/memory-store.js"></script>
+
+        <script type="text/javascript" src="js/mainview.js"></script>
+        <script type="text/javascript" src="js/directoryview.js"></script>
+        <script type="text/javascript" src="js/gamesview.js"></script>
+        <script type="text/javascript" src="js/aboutview.js"></script>
+        <script type="text/javascript" src="js/feedview.js"></script>
+        <script type="text/javascript" src="js/staticview.js"></script>
+        <script type="text/javascript" src="js/articleview.js"></script>
+        <script type="text/javascript" src="js/homeview.js"></script>
+        <script type="text/javascript" src="js/detailview.js"></script>
+
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+    </body>
+</html>
