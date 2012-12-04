@@ -20,7 +20,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:windowSoftInputMode="adjustPan"
       package="com.kickstartlab.android.kcapp" android:versionName="1.1" android:versionCode="5">
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="16"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16"/>
     
     <supports-screens
         android:largeScreens="true"
@@ -47,14 +47,40 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+     <!-- GCM requires a Google account. -->
+ 	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+ 
+ 	<!-- Keeps the processor from sleeping when a message is received. -->
+ 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+     <!--
+  Creates a custom permission so only this app can receive its messages.
+ 
+  NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
+        where PACKAGE is the application's package name.
+ -->
+ 	<permission
+         android:name="com.kickstartlab.android.kcapp.permission.C2D_MESSAGE"
+         android:protectionLevel="signature"/>
+ 	<uses-permission
+         android:name="com.kickstartlab.android.kcapp.permission.C2D_MESSAGE"/>
+ 
+ 	<!-- This app has permission to register and receive data message. -->
+ 	<uses-permission
+         android:name="com.google.android.c2dm.permission.RECEIVE"/>
+ 	
 
     <application android:icon="@drawable/icon" android:label="@string/app_name"
         android:debuggable="true">
         <activity android:name="kcapp" android:label="@string/app_name"
                 android:theme="@android:style/Theme.Black.NoTitleBar"
 	            android:screenOrientation="portrait"
-                android:configChanges="orientation|keyboard|keyboardHidden">
+                android:configChanges="orientation|keyboard|keyboardHidden"
+                android:launchMode="singleTop">
+            <intent-filter>
+         		<action android:name="com.kickstartlab.android.kcapp.MESSAGE"/>
+         		<category android:name="android.intent.category.DEFAULT"/>
+     		</intent-filter>    
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,6 +99,37 @@
 	        <category android:name="android.intent.category.DEFAULT"/> 
 	        </intent-filter>            
 	    </activity>
+		<activity android:name="com.arellomobile.android.push.PushWebview"/>
+		 
+		<activity android:name="com.arellomobile.android.push.MessageActivity"/>
+		 
+		<activity android:name="com.arellomobile.android.push.PushHandlerActivity"/>
+		 
+		<!--
+		  BroadcastReceiver that will receive intents from GCM
+		  services and handle them to the custom IntentService.
+		 
+		  The com.google.android.c2dm.permission.SEND permission is necessary
+		  so only GCM services can send data messages for the app.
+		-->
+		<receiver
+		        android:name="com.google.android.gcm.GCMBroadcastReceiver"
+		        android:permission="com.google.android.c2dm.permission.SEND">
+		    <intent-filter>
+		        <!-- Receives the actual messages. -->
+		        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+		        <!-- Receives the registration id. -->
+		        <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+		        <category android:name="PACKAGE_NAME"/>
+		    </intent-filter>
+		</receiver>
+		 
+		<!--
+		  Application-specific subclass of PushGCMIntentService that will
+		  handle received messages.
+		-->
+		<service android:name="com.arellomobile.android.push.PushGCMIntentService"/>	    
+	    
     </application>
 
 </manifest> 

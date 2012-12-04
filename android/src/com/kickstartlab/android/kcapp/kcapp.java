@@ -19,11 +19,11 @@
 
 package com.kickstartlab.android.kcapp;
 
-import android.app.Activity;
+import org.apache.cordova.DroidGap;
+
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import org.apache.cordova.*;
 
 public class kcapp extends DroidGap
 {
