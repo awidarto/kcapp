@@ -197,7 +197,7 @@ header.inner p{
 
 }
 .notif-box p{
-	font-size: 11px;
+	font-size: .5em;
 	color: #d2d2d2;
 }
 .notif-box img{
@@ -226,7 +226,7 @@ header.inner p{
 	margin-bottom: 10px;
 	text-align: left;
 	line-height: 20px;
-	font-size: 1.8em;
+	font-size: 1.6em;
 }
 .menuhome .row .button a{
 	font-family: Georgia,Roman,Serif;

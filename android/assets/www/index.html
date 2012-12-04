@@ -46,7 +46,7 @@
                   <img src="images/home-banner.jpg">
             </div>
 
-            <section id="mainContent" class="menuhome">
+            <div id="mainContent" class="menuhome">
               <div class="row">
                 <div class="twelve columns">
                     <a href="#whatson">
@@ -70,7 +70,7 @@
                     </a>
                 </div>
               </div>
-            </section>
+            </div>
           </div>
         </script>
 
@@ -78,9 +78,9 @@
             <div class="wrapper">
                 <header class="inner">
                     <p>{{title}}</p>
-                    <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
                 </header>
-                <section id="mainContent" class="inner-content">
+                <div id="mainContent" class="inner-content">
                     <div class="row">
                         <div class="twelve columns scroller">
                             <img src="images/img-inner-sample.jpg">
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
         </script>
 
@@ -105,7 +105,7 @@
             <div class="wrapper">
                 <header class="inner">
                 <p>{{title}}</p>
-                <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
                 </header>
                 <section id="mainContent" class="inner-content">
                     <div class="row">
@@ -126,7 +126,7 @@
           <div class="wrapper">
             <header class="inner">
               <p>{{title}}</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
               <div id="mainContent" class="inner-content">
                 <div class="row">
@@ -142,14 +142,14 @@
             <div class="wrapper">
                 <header class="inner">
                     <p>DIRECTORY</p>
-                    <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
                 </header>
                 <div class="wrapListContact">
                   <div class="searchbar">
                       <input type="text" placeholder="search here..." class="search-key" />
                   </div>
                 <div class="row">
-                    <div id="mainContent" class="inner-content  scroller">
+                    <div id="mainContent" class="inner-content dirscroller">
                         <div class="list-container shop-list">
 
                         </div>
@@ -171,44 +171,11 @@
             {{/.}}
         </script>
 
-        <script id="old_dir-tpl" type="text/x-handlebars-template">
-            <div class="wrapper">
-                <header class="inner">
-                    <p>DIRECTORY</p>
-                </header>
-                    <div class="wrapListContact">
-                      <div class="searchbar">
-                          <input type="text" placeholder="search here..." class="search-key" />
-                          <div class="twelve columns">
-                            <ul class="button-group even three-up radius wrapperTable">
-                                  <li class="button small secondary storeHead">STORE</li>
-                                  <li class="button small secondary">PHONE</li>
-                                  <li class="button small secondary">FLOOR</li>
-                            </ul>
-                          </div>
-                      </div>
-                    </div>
-                    <div class="inner-content">
-                      <div class="row">
-                          <ul class="shop-list">
-                          </ul>
-                      </div>
-                    </div>
-            </div>
-        </script>
-
-        <script id="old_dir-li-tpl" type="text/x-handlebars-template">
-            {{#.}}
-            <li><a href="/"><span class="storeName">{{this.shopname}}</span><span class="storePhone">{{this.phone}}</span><span class="storeFloor">{{this.floor}}</span></a></li>
-            {{/.}}
-        </script>
-
-
         <script id="games-tpl" type="text/x-handlebars-template">
             <div class="wrapper">
             <header class="inner">
               <p>GAMES</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
             <section id="mainContent" class="inner-content games">
               <div class="row">
@@ -230,7 +197,7 @@
             <div class="wrapper">
             <header class="inner">
               <p>GAMES</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
             <section id="mainContent" class="inner-content games">
                   <div class="row">
@@ -258,7 +225,7 @@
             <div class="wrapper">
             <header class="inner">
               <p>GAMES</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
             <section id="mainContent" class="inner-content games">
               <div class="row">
@@ -297,7 +264,7 @@
             <div class="wrapper">
             <header class="inner">
               <p>GAMES</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
             <section id="mainContent" class="inner-content games">
               <div class="row">
@@ -335,7 +302,7 @@
           <div class="wrapper">
             <header class="inner">
               <p>ABOUT US</p>
-              <a id="back-btn" class="header-button header-button-left header-back-button" href="#"><img src="images/back-btn.png"></a>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
             </header>
               <div id="mainContent" class="inner-content">
                 <div class="row">

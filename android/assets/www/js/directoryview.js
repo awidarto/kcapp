@@ -22,7 +22,7 @@ var DirectoryView = function(store){
                 self.iscroll.refresh();
             } else {
                 console.log('New iScroll');
-                self.iscroll = new iScroll($('.scroller', self.el)[0], {hScrollbar: false, vScrollbar: false });
+                self.iscroll = new iScroll($('.dirscroller', self.el)[0], {hScrollbar: false, vScrollbar: false });
             }
 
         });
