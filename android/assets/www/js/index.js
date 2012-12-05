@@ -26,6 +26,7 @@ var app = {
         this.detailsURL = /^#employees\/(\d{1,})/;        
         this.ondetailsURL = /^#ondetail\/(\d{1,})/;        
         this.staticURL = /^#static\/(\d{1,})/;        
+        this.shopURL = /^#shop\/(\d{1,})/;        
 
         this.whatsonURL = /^#whatson$/;        
         this.promoURL = /^#promo$/;        
@@ -101,6 +102,14 @@ var app = {
             if (match) {
                 this.store.findArticleById(Number(match[1]), function(article) {
                     self.slidePage(new ArticleView(article).render());
+                    self.setactive('home');
+                });
+            }            
+
+            match = hash.match(app.shopURL);
+            if (match) {
+                this.store.findShopById(Number(match[1]), function(article) {
+                    self.slidePage(new ShopView(article).render());
                     self.setactive('home');
                 });
             }            

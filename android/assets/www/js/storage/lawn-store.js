@@ -163,6 +163,24 @@ var LawnStorageStore = function(successCallback, errorCallback){
 
     }
 
+    this.findShopById = function(id, callback) {
+        this.store.all(function(shops){
+
+            var article = null;
+
+            var articles = shops.filter(function(element) {
+                return (element.value.t === "dir" && element.value.id === id);
+            });
+
+            for (var i=0; i < articles.length; i++) {
+                if (articles[i].value.id === id) {
+                    article = articles[i].value;
+                    break;
+                }
+            }
+            callback(article);
+        });
+    }    
 
     this.findArticleById = function(id, callback) {
         this.store.all(function(shops){

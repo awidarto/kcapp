@@ -28,7 +28,7 @@
         <link rel="stylesheet" type="text/css" href="css/transition.css" />
         <title>Kuningan City</title>
     </head>
-    <body onload="init();">
+    <body onload="init();beep();">
 
         <div id="container"></div>
         <div class="bottom-bar">
@@ -87,6 +87,33 @@
                         <div class="detail-container">
                           <h4>{{title}}</h4>
                           <p>{{body}}</p>
+                          <p>
+                            <a href="http://www.facebook.com/share.php?u={{u}}&t={{t}}&i={{i}}&d={{d}}"><img src="images/facebook.png"/></a>
+                            <a href="https://twitter.com/intent/tweet?text={{tweet}}"><img src="images/twitter.png"/></a>
+                          </p>
+                        </div>
+                        <div class="share-buttons"></div>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </script>
+
+        <script id="shop-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                <p>{{shopname}}</p>
+                <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
+                </header>
+                <section id="mainContent" class="inner-content">
+                    <div class="row">
+                    <div class="twelve columns">
+                        <img src="images/img-content-sample.jpg">
+                        <div class="detail-container">
+                          <h4>{{shopname}}</h4>
+                          <p>{{floor}} - {{location}}</p>
+                          <p>{{phone}}</p>
+                          <p>{{description}}</p>
                           <p>
                             <a href="http://www.facebook.com/share.php?u={{u}}&t={{t}}&i={{i}}&d={{d}}"><img src="images/facebook.png"/></a>
                             <a href="https://twitter.com/intent/tweet?text={{tweet}}"><img src="images/twitter.png"/></a>
@@ -200,7 +227,7 @@
         <script id="dir-li-tpl" type="text/x-handlebars-template">
             {{#.}}
                 <div class="list-item clearfix">
-                  <a href="#shopdetail/{{this.id}}">
+                  <a href="#shop/{{this.id}}">
                     <img src="images/img-list-1.jpg">
                     <p class="title-list">{{this.shopname}}</p>
                     <p><span class="storePhone">{{this.category}}</span><span class="storeFloor">{{this.floor}}</span><span class="storePhone">{{this.phone}}</span></p>
@@ -389,7 +416,6 @@
         <script type="text/javascript" src="js/lib/jquery.min.js"></script>
         <script type="text/javascript" src="js/lib/handlebars.js"></script>
         <script type="text/javascript" src="js/lib/iscroll.js"></script>
-        <script type="text/javascript" src="js/lib/jsShare.js"></script>
 
 
         <script type="text/javascript" src="js/mainview.js"></script>
@@ -401,6 +427,7 @@
         <script type="text/javascript" src="js/articleview.js"></script>
         <script type="text/javascript" src="js/homeview.js"></script>
         <script type="text/javascript" src="js/detailview.js"></script>
+        <script type="text/javascript" src="js/shopview.js"></script>
 
         <script type="text/javascript" src="js/index.js"></script>
 
