@@ -74,33 +74,6 @@
           </div>
         </script>
 
-        <script id="feed-tpl" type="text/x-handlebars-template">
-            <div class="wrapper">
-                <header class="inner">
-                    <p>{{title}}</p>
-                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
-                </header>
-                <div id="mainContent" class="inner-content">
-                    <div class="row">
-                        <div class="twelve columns scroller">
-                            <img src="images/img-inner-sample.jpg">
-                            <div class="list-container">
-                                {{#each feeds}}
-                                  <div class="list-item clearfix">
-                                    <a href="#ondetail/{{this.id}}">
-                                      <img src="images/img-list-1.jpg">
-                                     <p class="title-list">{{this.title}}</p>
-                                      <p>{{this.short}}</p>
-                                    </a>
-                                  </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </script>
-
         <script id="article-tpl" type="text/x-handlebars-template">
             <div class="wrapper">
                 <header class="inner">
@@ -138,6 +111,67 @@
           </div>
         </script>     
 
+        <script id="old-feed-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                    <p>{{title}}</p>
+                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
+                </header>
+                <div id="mainContent" class="inner-content">
+                    <div class="row">
+                        <div class="twelve columns">
+                            <img src="images/img-inner-sample.jpg">
+                            <div class="list-container scroller">
+                                {{#each feeds}}
+                                  <div class="list-item clearfix">
+                                    <a href="#ondetail/{{this.id}}">
+                                      <img src="images/img-list-1.jpg">
+                                     <p class="title-list">{{this.title}}</p>
+                                      <p>{{this.short}}</p>
+                                    </a>
+                                  </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+
+        <script id="feed-tpl" type="text/x-handlebars-template">
+            <div class="wrapper">
+                <header class="inner">
+                    <p>{{title}}</p>
+                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
+                </header>
+                <div class="wrapListContact">
+                 <div class="row">
+                    <img src="images/img-inner-sample.jpg">
+                      <div class="twelve columns">
+                        <div id="feedContainer" class="inner-content">
+                            <div class="list-container feed-list">
+
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="feed-li-tpl" type="text/x-handlebars-template">
+            {{#.}}
+              <div class="list-item clearfix">
+                <a href="#ondetail/{{this.id}}">
+                  <img src="images/img-list-1.jpg">
+                 <p class="title-list">{{this.title}}</p>
+                  <p>{{this.short}}</p>
+                </a>
+              </div>
+            {{/.}}
+        </script>
+
         <script id="dir-tpl" type="text/x-handlebars-template">
             <div class="wrapper">
                 <header class="inner">
@@ -149,7 +183,7 @@
                       <input type="text" placeholder="search here..." class="search-key" />
                   </div>
                 <div class="row">
-                    <div id="mainContent" class="inner-content dirscroller">
+                    <div id="dirContainer" class="inner-content">
                         <div class="list-container shop-list">
 
                         </div>

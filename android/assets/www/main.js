@@ -176,7 +176,7 @@ function initPushwoosh()
 {
     var pushNotification = window.plugins.pushNotification;
  
-    pushNotification.registerDevice({ projectid: "246445057014", appid : "733D7-CA251" },
+    pushNotification.registerDevice({ projectid: "657710964737", appid : "6417C-AC140" },
         function(status) {
             var pushToken = status;
             console.log('push token: ' + pushToken);

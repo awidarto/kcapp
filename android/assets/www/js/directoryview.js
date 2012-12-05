@@ -14,18 +14,16 @@ var DirectoryView = function(store){
 
     this.findAllShops = function() {
         this.store.findAllShops(function(shops) {
-            console.log(shops);
             $('.shop-list').html(DirectoryView.itemTemplate(shops));
-
-            if (self.iscroll) {
-                console.log('Refresh iScroll');
-                self.iscroll.refresh();
-            } else {
-                console.log('New iScroll');
-                self.iscroll = new iScroll($('.dirscroller', self.el)[0], {hScrollbar: false, vScrollbar: false });
-            }
-
         });
+
+        if (this.diriscroll) {
+            console.log('Refresh iScroll');
+            this.diriscroll.refresh();
+        } else {
+            console.log('New iScroll');
+            this.diriscroll = new iScroll($('#dirContainer',this.el)[0], {hScrollbar: false, vScrollbar: false });
+        }
     };    
 
     this.render = function() {
