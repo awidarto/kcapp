@@ -199,8 +199,6 @@ var app = {
                 this.store.dbreset(function(result){
                     console.log(result);
                 });
-                self.slidePage(new GamesView("main", this.store).render());
-                self.setactive('games');
             }
 
         }
@@ -219,6 +217,7 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        window.SocialShare = new SocialShare();
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {

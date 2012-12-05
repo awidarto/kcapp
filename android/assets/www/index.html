@@ -87,8 +87,12 @@
                         <div class="detail-container">
                           <h4>{{title}}</h4>
                           <p>{{body}}</p>
-                          <p><a id="fb-btn" href="#"><img src="images/fb-btn.gif"/></a><a href="#"><img src="images/twitter-btn.gif"/></a></p>
+                          <p>
+                            <a href="http://www.facebook.com/share.php?u={{u}}&t={{t}}&i={{i}}&d={{d}}"><img src="images/facebook.png"/></a>
+                            <a href="https://twitter.com/intent/tweet?text={{tweet}}"><img src="images/twitter.png"/></a>
+                          </p>
                         </div>
+                        <div class="share-buttons"></div>
                     </div>
                     </div>
                 </section>
@@ -378,7 +382,6 @@
               </div>
           </div>
         </script>
-
         <script type="text/javascript" src="cordova-2.2.0.js"></script>
         <script type="text/javascript" src="barcodescanner.js"></script>
         <script type="text/javascript" src="PushNotification.js"></script>
@@ -386,6 +389,7 @@
         <script type="text/javascript" src="js/lib/jquery.min.js"></script>
         <script type="text/javascript" src="js/lib/handlebars.js"></script>
         <script type="text/javascript" src="js/lib/iscroll.js"></script>
+        <script type="text/javascript" src="js/lib/jsShare.js"></script>
 
 
         <script type="text/javascript" src="js/mainview.js"></script>
@@ -404,6 +408,8 @@
         <script src="js/lib/lawnchair-adapter-webkit-sqlite-0.6.1.js"></script>
         <script src="js/lib/lawnchair-adapter-indexed-db-0.6.1.js"></script>
 
+
+        <script src="js/lib/require.js"></script>
         <script src="js/storage/lawn-store.js"></script>
         
         <script type="text/javascript">
