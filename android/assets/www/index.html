@@ -142,34 +142,6 @@
           </div>
         </script>     
 
-        <script id="old-feed-tpl" type="text/x-handlebars-template">
-            <div class="wrapper">
-                <header class="inner">
-                    <p>{{title}}</p>
-                  <span id="back-btn" class="header-button header-button-left header-back-button" onClick="history.go(-1);return true;"><img src="images/back-btn.png"></span>
-                </header>
-                <div id="mainContent" class="inner-content">
-                    <div class="row">
-                        <div class="twelve columns">
-                            <img src="images/img-inner-sample.jpg">
-                            <div class="list-container scroller">
-                                {{#each feeds}}
-                                  <div class="list-item clearfix">
-                                    <a href="#ondetail/{{this.id}}">
-                                      <img src="images/img-list-1.jpg">
-                                     <p class="title-list">{{this.title}}</p>
-                                      <p>{{this.short}}</p>
-                                    </a>
-                                  </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </script>
-
-
         <script id="feed-tpl" type="text/x-handlebars-template">
             <div class="wrapper">
                 <header class="inner">
