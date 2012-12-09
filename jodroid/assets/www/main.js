@@ -18,6 +18,7 @@
 */
 
 var deviceInfo = function() {
+    /*
     document.getElementById("platform").innerHTML = device.platform;
     document.getElementById("version").innerHTML = device.version;
     document.getElementById("uuid").innerHTML = device.uuid;
@@ -25,6 +26,7 @@ var deviceInfo = function() {
     document.getElementById("width").innerHTML = screen.width;
     document.getElementById("height").innerHTML = screen.height;
     document.getElementById("colorDepth").innerHTML = screen.colorDepth;
+    */
 };
 
 var getLocation = function() {
@@ -35,6 +37,17 @@ var getLocation = function() {
     };
     navigator.geolocation.getCurrentPosition(suc, locFail);
 };
+
+var scan = function(){
+    window.plugins.barcodeScanner.scan(
+        function(result) {
+        alert("Scanned Code: " + result.text 
+                + ". Format: " + result.format
+                + ". Cancelled: " + result.cancelled);
+    }, function(error) {
+        alert("Scan failed: " + error);
+    });
+}
 
 var beep = function() {
     navigator.notification.beep(2);
@@ -157,9 +170,36 @@ function toggleCompass() {
     }
 }
 
+function initPushwoosh()
+{
+    var pushNotification = window.plugins.pushNotification;
+ 
+    pushNotification.registerDevice({ projectid: "657710964737", appid : "6417C-AC140" },
+        function(status) {
+            var pushToken = status;
+            console.log('push token: ' + pushToken);
+        },
+        function(status) {
+            console.log(JSON.stringify(['failed to register ', status]));
+        }
+    );
+ 
+    document.addEventListener('push-notification', function(event) {
+        var title = event.notification.title;
+            var userData = event.notification.userdata;
+ 
+            if(typeof(userData) != "undefined") {
+            console.log('user data: ' + JSON.stringify(userData));
+        }
+ 
+        navigator.notification.alert(title);
+    });
+}
+
 function init() {
     // the next line makes it impossible to see Contacts on the HTC Evo since it
     // doesn't have a scroll button
     // document.addEventListener("touchmove", preventBehavior, false);
-    document.addEventListener("deviceready", deviceInfo, true);
+    document.addEventListener("deviceready", initPushwoosh, true);
+    console.log('run main init');    
 }

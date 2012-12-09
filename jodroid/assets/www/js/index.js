@@ -16,10 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var db;
+
 var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
+        kApp();
     },
 
     // Bind Event Listeners

@@ -1,0 +1,20 @@
+#gamebar span{
+	padding:0.4em 1em;
+	background-color: yellow;
+	border:thin solid ;
+	
+}
+
+#gamebar{
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	text-align: center;
+}
+
+#gamebar .active{
+	background-color: orange;	
+}
+
+.cluebar {
+	font-size: .8em;
+}

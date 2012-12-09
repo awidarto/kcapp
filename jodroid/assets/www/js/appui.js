@@ -14,6 +14,24 @@ joTabBar = function() {
 	joList.apply(this, arguments);
 };
 
+
+//console.log(window.localStorage);
+var firstRun;
+var db = window.openDatabase("kcityDB", "1.0", "KCityDB", 1000000);
+
+if(firstRun = window.localStorage.getItem("firstrun")){
+	console.log(firstRun);
+}else{
+	window.localStorage.setItem("firstrun", true);
+	window.localStorage.setItem("gamestate", "main");
+	window.localStorage.setItem("gamekey", "123456789");
+
+}
+
+var gs = window.localStorage.getItem("gamestate"); // gamestate
+
+var whatdata = [];
+
 joTabBar.extend(joList, {
 	tagName: "jotabbar",
 	
@@ -34,12 +52,11 @@ joTabBar.extend(joList, {
 	}
 });
 
-
-
+//var db = window.openDatabase("kcitydb", "1.0", "KCityDb", 1000000);
 
 /*Now we get to the demo itself.*/
 
-var kApp = (function () {
+var kApp = function () {
     var scn;
     var menu;
     var stack;
@@ -74,23 +91,23 @@ var kApp = (function () {
 
 	var yql = new joYQL("select title from rss where url='http://davebalmer.wordpress.com/feed'");
 
-	var dirlist = new joList(yql);
-	//var dirlist = new joList(yql).attach(document.body);
-
+	var dirdata = new Array();
+	var dirlist = new joList(dirdata).attach(document.body);
 	dirlist.formatItem = function(data, index) {
 		console.log(data.title);
-		return joList.prototype.formatItem.call(this, data.title, index);
+		return joList.prototype.formatItem.call(this, data.shopname, index);
 	};
 
-	var whatlist = new joList(yql).attach(document.body);
-
+	// whatson initial list
+	var whatdata = new Array();
+	var whatlist = new joList(whatdata).attach(document.body);
 	whatlist.formatItem = function(data, index) {
 		console.log(data.title);
 		return joList.prototype.formatItem.call(this, data.title, index);
 	};
 
-	var promolist = new joList(yql).attach(document.body);
-
+	var promodata = new Array();
+	var promolist = new joList(promodata).attach(document.body);
 	promolist.formatItem = function(data, index) {
 		console.log(data.title);
 		return joList.prototype.formatItem.call(this, data.title, index);
@@ -130,6 +147,7 @@ var kApp = (function () {
 		closebutton = new joButton('Close'),
 	];
 
+    loader = [new joHTML('Loading...')];
 	/*About Jo.*/
     aboutCard = new joCard([
 		datastring = new joHTML('This is a demonstration of some of the customization you can do with the Jo JavaScript framework. This demo displays some iOS-style touches such as a tab bar for navigation, a notification badge on the tab icon, and an action-sheet dialog.'),
@@ -150,8 +168,7 @@ var kApp = (function () {
     directoryCard = new joCard([
 			new joContainer([
 				new joFlexrow([
-					input = new joInput("http://davebalmer.wordpress.com/feed"),
-				refreshbutton = new joButton('Refresh'),
+					dirrefreshbutton = new joButton('Refresh'),
 				]),
 			]).setStyle({
 				borderTop: "1px solid rgba(255, 255, 255, .4)",
@@ -165,8 +182,7 @@ var kApp = (function () {
     whatsonCard = new joCard([
 			new joContainer([
 				new joFlexrow([
-					input = new joInput("http://davebalmer.wordpress.com/feed"),
-				refreshbutton = new joButton('Refresh'),
+					whatsonrefreshbutton = new joButton('Refresh'),
 				]),
 			]).setStyle({
 				borderTop: "1px solid rgba(255, 255, 255, .4)",
@@ -180,8 +196,7 @@ var kApp = (function () {
     promoCard = new joCard([
 			new joContainer([
 				new joFlexrow([
-					input = new joInput("http://davebalmer.wordpress.com/feed"),
-				refreshbutton = new joButton('Refresh'),
+					promorefreshbutton = new joButton('Refresh'),
 				]),
 			]).setStyle({
 				borderTop: "1px solid rgba(255, 255, 255, .4)",
@@ -200,26 +215,56 @@ var kApp = (function () {
 		])
     ]).setTitle('Games');
 
+
     gameChoiceCard = new joCard([
 		new joTitle('Select your Game'),
 		new joGroup([
+
 		    tsearchbutton = new joButton('K Code'),	
 		    logobutton = new joButton('Store Hopping'),	
 		])
     ]).setTitle('Choose Game');
 
+    var gamebar = '<div id="gamebar"><span id="1" class="active">1</span><span id="2">2</span><span id="3">3</span><span id="4">4</span><span id="5">5</span></div>';
+
+    var cluebar = '<div class="cluebar">Watch me for the next clue !</div>';
+
     tsearchCard = new joCard([
-		new joTitle('K Code')
+    	new joGroup([
+	    	new joHTML(gamebar),
+	    	new joDivider(),
+		    tcluebar = new joHTML(cluebar),
+	    	new joDivider(),
+			tscanbutton = new joButton('Scan Now')
+    	])
     ]).setTitle('K Code');
 
     logoCard = new joCard([
-		new joTitle('Store Hopping')
+    	new joGroup([
+	    	new joHTML(gamebar),
+	    	new joDivider(),
+		    lcluebar = new joHTML(cluebar),
+	    	new joDivider(),
+			lscanbutton = new joButton('Scan Now')
+    	])
     ]).setTitle('Store Hopping');
 
     listCard = new joCard([
 		new joTitle('List Page'),
 		datastring = new joHTML('This is a demonstration of some of the customization you can do with the Jo JavaScript framework. This demo displays some iOS-style touches such as a tab bar for navigation, a notification badge on the tab icon, and an action-sheet dialog.'),
     ]);
+
+	var scard = function(data){
+    	return new joCard(
+			new joHTML(data.description)
+		).setTitle(data.shopname);
+    }
+
+	var artcard = function(data){
+    	return new joCard(
+			new joHTML(data.body)
+		).setTitle(data.title);
+    }
 
     /*Button events.*/
      
@@ -229,6 +274,14 @@ var kApp = (function () {
 			{type : "about"}
 		]);
 		menu.refresh();
+	})
+
+    tscanbutton.selectEvent.subscribe(function() { 
+    	scan();
+	})
+
+    lscanbutton.selectEvent.subscribe(function() { 
+    	scan();
 	})
 
   /*Send text via e-mail.*/
@@ -249,22 +302,26 @@ var kApp = (function () {
 
 	whatbutton.selectEvent.subscribe(function(){
 		active = "home";
+		getwhatson();
 		stack.push(whatsonCard);
+	})
 
-		this.yql = yql;
-		this.input = input;
-
-		refresh();
+	whatsonrefreshbutton.selectEvent.subscribe(function(){
+		getwhatson();
 	})
 
 	promobutton.selectEvent.subscribe(function(){
 		active = "home";
+		getpromo();
 		stack.push(promoCard);
+	})
 
-		this.yql = yql;
-		this.input = input;
+	promorefreshbutton.selectEvent.subscribe(function(){
+		getpromo();
+	})
 
-		refresh();
+	dirrefreshbutton.selectEvent.subscribe(function(){
+		getdirectory();
 	})
 
 	aboutbutton.selectEvent.subscribe(function(){
@@ -274,25 +331,47 @@ var kApp = (function () {
 
 	tsearchbutton.selectEvent.subscribe(function(){
 		active = "games";
+		gs = setGameState('tsearch');
 		stack.push(tsearchCard);
 	})
 
 	logobutton.selectEvent.subscribe(function(){
 		active = "games";
+		gs = setGameState('logo');
 		stack.push(logoCard);
 	})
 
 	validatebutton.selectEvent.subscribe(function(){
 		active = "games";
 		joFocus.set(this.input);
-		if(gamekey.getData() === '123456789'){
+		if(gamekey.getData() === getGameKey()){
+			gs = setGameState('choice');
 			stack.push(gameChoiceCard);
 		}else{
 			scn.showPopup(invalidCard);
 		}
 	})
       
-    // Set up the page elements		
+    // list event
+
+    dirlist.selectEvent.subscribe(function(index){
+    	var shopdata = dirdata[index];
+    	stack.push(scard(shopdata));
+    })
+
+    whatlist.selectEvent.subscribe(function(index){
+    	var article = whatdata[index];
+    	stack.push(artcard(article));
+    })
+
+    promolist.selectEvent.subscribe(function(index){
+    	var article = promodata[index];
+    	stack.push(artcard(article));
+    })
+
+    // Set up the page elements	
+
+
     scn = new joScreen(
 			container = new joContainer([
 				nav = new joNavbar('Home'),
@@ -327,45 +406,191 @@ var kApp = (function () {
     menu.selectEvent.subscribe(function(id) {
 		if (id == 0) {
 			active = "home";
-			nav.setTitle("Home");
 			stack.push(joCache.get('home'));					
 		}
 						
 		if (id == 1) {
 			active = "about";
-			nav.setTitle("Directory");
-		    nav.setStack(stack);
 			stack.push(directoryCard);
-
-			this.yql = yql;
-			this.input = input;
-
-			refresh();
+			getdirectory();
 		} //if		
 
 		if (id == 2) {
 			active = "games";
-			nav.setTitle("Games");
-		    nav.setStack(stack);
-			stack.push(gamesCard);
+			if(gs === "main"){
+				stack.push(gamesCard);
+			}else if(gs === "choice"){
+				stack.push(gameChoiceCard);
+			}else if(gs === "tsearch"){
+				stack.push(tsearchCard);
+			}else if(gs === "logo"){
+				stack.push(logoCard);
+			}
 		} //if
 
 	});
 
     menu.setIndex(0);     
 
+    setGameState = function(state){
+    	window.localStorage.setItem("gamestate", state);
+    	return state;	
+    }
+
+    getGameKey = function(){
+    	var key = window.localStorage.getItem("gamekey");
+		return key;    	
+    }
+
 	refresh = function() {
 		joFocus.set(this.input);
 		yql.setQuery("select title from rss where url='" + this.input.getData() + "' limit 200");
 //		console.log(this.yql.query)
 		yql.exec();
+		console.log(yql);
+	}
+
+	var getwhatson = function(){
+		query = "SELECT * FROM NEWS WHERE SECTION = 'whatson'";
+		db.transaction(function(tx){
+			tx.executeSql(query, [],whatQuerySuccess,errorCB);
+		},errorCB);
+	}
+
+	var whatQuerySuccess = function(tx, res){
+		whatdata.splice(0, whatdata.length);
+		console.log(whatdata);
+
+		for(var i=0; i < res.rows.length; i++){
+			whatdata.push(res.rows.item(i));
+		}
+
+		whatlist.refresh();
+	}
+
+	var getpromo = function(){
+		query = "SELECT * FROM NEWS WHERE SECTION = 'promo'";
+		db.transaction(function(tx){
+			tx.executeSql(query, [],promoQuerySuccess,errorCB);
+		},errorCB);
+	}
+
+	var promoQuerySuccess = function(tx, res){
+		promodata.splice(0, promodata.length);
+		for(var i=0; i < res.rows.length; i++){
+			promodata.push(res.rows.item(i));
+		}
+		promolist.refresh();
+	}
+
+	var getdirectory = function(){
+		query = "SELECT * FROM SHOPS";
+		db.transaction(function(tx){
+			tx.executeSql(query, [],directoryQuerySuccess,errorCB);
+		},errorCB);
+	}
+
+	var directoryQuerySuccess = function(tx, res){
+		dirdata.splice(0, dirdata.length);
+		for(var i=0; i < res.rows.length; i++){
+			dirdata.push(res.rows.item(i));
+		}
+		dirlist.refresh();
 	}
 	
 	//joGesture.backEvent.subscribe(stack.pop, stack); 
 
-})();
+};
 			
+var remoteBaseUrl = "http://www.kickstartlab.com/kcity/index.php";
 
+var firstRunner = function(){
+	db.transaction(populateDB, errorCB, fillDirectory);
+	fillUpdates();
+	window.localStorage.setItem("firstrun", false);
+}
+
+var fillDirectory = function(){
+	$.jsonp({
+        url: remoteBaseUrl + '?s=dir',
+        callbackParameter: 'callback',
+        timeout: 25000,
+        success: function(data, status) {
+        	db.transaction(function(tx){
+        		for(i = 0; i < data.length; i++){
+					//console.log(data[i]);
+					tx.executeSql('INSERT INTO SHOPS (id, category, description, floor,sid,location,phone, shopname,t) VALUES ("' + data[i].id +
+										'","' + data[i].category + 
+										'","' + data[i].description + 
+										'","' + data[i].floor +
+										'","' + data[i].id +
+										'","' + data[i].location +
+										'","' + data[i].phone +
+										'","' + data[i].shopname +
+										'","' + data[i].t + '")');
+        		}
+        	}, errorCB, successCB);
+        },
+        error: function(){
+        	console.log('jsonp error');     
+        }
+    });	
+}
+
+var fillUpdates = function(){
+	$.jsonp({
+        url: remoteBaseUrl + '?s=news',
+        callbackParameter: 'callback',
+        timeout: 25000,
+        success: function(data, status) {
+        	db.transaction(function(tx){
+        		for(i = 0; i < data.length; i++){
+					console.log(data[i]);
+					tx.executeSql('INSERT INTO NEWS (id, sid, t, title, short, body, section, is_head) VALUES ("' + data[i].id +
+										'","' + data[i].id + 
+										'","' + data[i].t + 
+										'","' + data[i].title +
+										'","' + data[i].short +
+										'","' + data[i].body +
+										'","' + data[i].section +
+										'","' + data[i].is_head + '")');
+        		}
+        	}, errorCB, successCB);
+        },
+        error: function(){
+        	console.log('jsonp error');     
+        }
+    });	
+}
+
+var populateDB = function(tx) {	
+	tx.executeSql('DROP TABLE IF EXISTS DEMO');
+
+	tx.executeSql('DROP TABLE IF EXISTS DEMO');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+
+	tx.executeSql('DROP TABLE IF EXISTS SHOPS');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS SHOPS (id unique, category, description, floor,sid,location,phone, shopname,t)');
+
+	tx.executeSql('DROP TABLE IF EXISTS NEWS');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS NEWS (id unique, sid, t, title, short, body, section, is_head)');
+
+	tx.executeSql('DROP TABLE IF EXISTS GAMES');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS GAMES (id unique, sid, t, title, short, body, section, is_head)');
+
+}
+
+var errorCB = function(tx, err) {
+    console.log("Error processing SQL: "+err);
+}
+
+// Transaction success callback
+//
+var successCB = function() {
+    console.log("success!");
+}
 
 
 

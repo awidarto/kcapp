@@ -743,6 +743,12 @@ joscroller {
 	display: block;
 	height: 100%;
 	width: 100%;
+	/*	this is the default
+	
+	overflow: hidden;
+
+	changed below for android
+	*/
 	overflow: scroll;
 	-webkit-overflow-scrolling:touch;
 	padding: 0;

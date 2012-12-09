@@ -77,7 +77,7 @@
 	            android:screenOrientation="portrait"
                 android:configChanges="orientation|keyboard|keyboardHidden"
                 android:launchMode="singleTop">
-            <intent-filter>
+        <intent-filter>
          		<action android:name="com.kickstartlab.android.kcapp.MESSAGE"/>
          		<category android:name="android.intent.category.DEFAULT"/>
      		</intent-filter>    
