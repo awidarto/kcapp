@@ -25,6 +25,7 @@ if(firstRun = window.localStorage.getItem("firstrun")){
 	window.localStorage.setItem("firstrun", true);
 	window.localStorage.setItem("gamestate", "main");
 	window.localStorage.setItem("gamekey", "123456789");
+	window.localStorage.setItem("gamecluecurrent", "0");
 
 }
 

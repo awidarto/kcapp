@@ -1,0 +1,22 @@
+games = [
+	{id:"1", day:"Wed/12", time:"1500"		, clue: "Kebugaran adalah hal utama dalam hidup"				, answer: "Jatomi Fitness"},
+	{id:"2", day:"Wed/12", time:"1530"		, clue: "Pasar modern asal Korea"								, answer: "Lotte Mart"},
+	{id:"3", day:"Wed/12", time:"1600"		, clue: "Underground designers meet you"						, answer: "The Meet Market"},
+	{id:"4", day:"Wed/12", time:"1630"		, clue: "'Ku rasa ku telah jatuh' cinta pada Pandangan Pertama"	, answer: "RAN at Main stage"},
+	{id:"5", day:"Wed/12", time:"1700"		, clue: "Metrox pride where you can find wakai"					, answer: "Mezzo"},
+	{id:"6", day:"Wed/12", time:"1730"		, clue: "Kunci musik untuk tampil stylish"						, answer: "Stradivarius"},
+	{id:"7", day:"Wed/12", time:"1800"		, clue: "6 personnel and essential"								, answer: "Malliq at Main stage"},
+	{id:"8", day:"Wed/12", time:"1830"		, clue: "Pusat Perkakas Terlengkap"								, answer: "Ace Hardware"},
+	{id:"9", day:"Thurs/13", time:"1500"	, clue: "Kicauan burung asal Bandung"							, answer: "Hummingbird"},
+	{id:"10", day:"Thurs/13", time:"1530"	, clue: "Medium well"											, answer: "Outback"},
+	{id:"11", day:"Thurs/13", time:"1600"	, clue: "The Life of Pi"										, answer: "XXI"},
+	{id:"12", day:"Thurs/13", time:"1630"	, clue: "Kids' heaven"											, answer: "Amazing City"},
+	{id:"13", day:"Thurs/13", time:"1700"	, clue: "where pink bubbles meet rainbow jelly"					, answer: "Calais"},
+	{id:"14", day:"Thurs/13", time:"1730"	, clue: "Doraemon's favorite food"								, answer: "Dorayaki Addict"},
+	{id:"15", day:"Thurs/13", time:"1800"	, clue: "Fashion and Lifestyle Pop-up Store"					, answer: "The Meet Market"},
+	{id:"16", day:"Thurs/13", time:"1830"	, clue: "Sweat it out!!"										, answer: "Jatomi Fitness"},
+	{id:"17", day:"Thurs/13", time:"1900"	, clue: "Outdoor café"											, answer: "Mezzo B-side café"},
+	{id:"18", day:"Thurs/13", time:"1930"	, clue: "Variety of food in natural environment"				, answer: "Eatery"},
+	{id:"19", day:"Thurs/13", time:"2000"	, clue: "All Access Jakarta"									, answer: "The Meet Market"},
+	{id:"20", day:"Thurs/13", time:"2030"	, clue: "Coming from the same origin as kimchi"				, answer: "Lotte Mart"}
+];
