@@ -19,15 +19,274 @@ joTabBar = function() {
 var firstRun;
 var db = window.openDatabase("kcityDB", "1.0", "KCityDB", 1000000);
 
+
+			
+var remoteBaseUrl = "http://www.kickstartlab.com/kcity/index.php";
+
+var firstRunner = function(){
+	db.transaction(populateDB, errorCB, fillDirectory);
+	fillUpdates();
+	window.localStorage.setItem("firstrun", false);
+}
+
+var fillDirectory = function(){
+	$.jsonp({
+        url: remoteBaseUrl + '?s=dir',
+        callbackParameter: 'callback',
+        timeout: 25000,
+        success: function(data, status) {
+        	db.transaction(function(tx){
+        		for(i = 0; i < data.length; i++){
+					//console.log(data[i]);
+					tx.executeSql('INSERT INTO SHOPS (id, category, description, floor,sid,location,phone, shopname,t) VALUES ("' + data[i].id +
+										'","' + data[i].category + 
+										'","' + data[i].description + 
+										'","' + data[i].floor +
+										'","' + data[i].id +
+										'","' + data[i].location +
+										'","' + data[i].phone +
+										'","' + data[i].shopname +
+										'","' + data[i].t + '")');
+        		}
+        	}, errorCB, successCB);
+        },
+        error: function(){
+        	//console.log('jsonp error');     
+        }
+    });	
+}
+
+var fillUpdates = function(){
+	$.jsonp({
+        url: remoteBaseUrl + '?s=news',
+        callbackParameter: 'callback',
+        timeout: 25000,
+        success: function(data, status) {
+        	db.transaction(function(tx){
+        		for(i = 0; i < data.length; i++){
+					//console.log(data[i]);
+					tx.executeSql('INSERT INTO NEWS (id, sid, t, title, short, body, section, is_head) VALUES ("' + data[i].id +
+										'","' + data[i].id + 
+										'","' + data[i].t + 
+										'","' + data[i].title +
+										'","' + data[i].short +
+										'","' + data[i].body +
+										'","' + data[i].section +
+										'","' + data[i].is_head + '")');
+        		}
+        	}, errorCB, successCB);
+        },
+        error: function(){
+        	//console.log('jsonp error');     
+        }
+    });	
+}
+
+var populateDB = function(tx) {	
+	tx.executeSql('DROP TABLE IF EXISTS DEMO');
+
+	tx.executeSql('DROP TABLE IF EXISTS DEMO');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+
+	tx.executeSql('DROP TABLE IF EXISTS SHOPS');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS SHOPS (id unique, category, description, floor,sid,location,phone, shopname,t)');
+
+	tx.executeSql('DROP TABLE IF EXISTS NEWS');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS NEWS (id unique, sid, t, title, short, body, section, is_head)');
+
+	tx.executeSql('DROP TABLE IF EXISTS GAMES');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS GAMES (id unique, sid, t, title, short, body, section, is_head)');
+
+}
+
+var errorCB = function(tx, err) {
+    //console.log("Error processing SQL: "+err);
+}
+
+// Transaction success callback
+//
+var successCB = function() {
+    //console.log("success!");
+}
+
+var weekdays = [
+	"Sun"
+	,"Mon"
+	,"Tue"
+	,"Wed"
+	,"Thu"
+	,"Fri"
+	,"Sat"
+];
+
+
+
+var today = new Date();
+var daynow = weekdays[today.getDay()];
+var todate = daynow + '/' + today.getMonth();
+
+var dayone = new Date(2012, 12, 12, 15);
+var daytwo = new Date(2012, 12, 13, 15);
+
+var curr;
+
+
+
 if(firstRun = window.localStorage.getItem("firstrun")){
-	console.log(firstRun);
+	if(firstRun === true){
+		window.localStorage.setItem("gamestate", "main");
+		window.localStorage.setItem("gamekey", "123456789");
+		window.localStorage.setItem("gamecluecurrent", "0");
+		window.localStorage.setItem("gameanswercurrent", "0");
+
+		window.localStorage.setItem("gamestep", 0);
+		window.localStorage.setItem("gameanswer_1", "0");
+		window.localStorage.setItem("gameanswer_2", "0");
+		window.localStorage.setItem("gameanswer_3", "0");
+		window.localStorage.setItem("gameanswer_4", "0");
+		window.localStorage.setItem("gameanswer_5", "0");
+
+		window.localStorage.setItem("gamescan_1", "0");
+		window.localStorage.setItem("gamescan_2", "0");
+		window.localStorage.setItem("gamescan_3", "0");
+		window.localStorage.setItem("gamescan_4", "0");
+		window.localStorage.setItem("gamescan_5", "0");
+
+		if(daynow === 'Mon' || daynow === 'Wed' || daynow === 'Thu'){
+			window.localStorage.setItem("gameinsession", "1");
+		}else{
+			window.localStorage.setItem("gameinsession", "0");		
+		}
+		firstRunner();
+		window.localStorage.setItem("firstrun", false);
+	}else{
+		if(daynow === 'Mon' || daynow === 'Wed' || daynow === 'Thu'){
+			window.localStorage.setItem("gameinsession", "1");
+		}else{
+			window.localStorage.setItem("gameinsession", "0");		
+		}
+	}
 }else{
-	window.localStorage.setItem("firstrun", true);
+	console.log('firstrun created');
 	window.localStorage.setItem("gamestate", "main");
 	window.localStorage.setItem("gamekey", "123456789");
 	window.localStorage.setItem("gamecluecurrent", "0");
+	window.localStorage.setItem("gameanswercurrent", "0");
+
+	window.localStorage.setItem("gamestep", 0);
+	window.localStorage.setItem("gameanswer_1", "0");
+	window.localStorage.setItem("gameanswer_2", "0");
+	window.localStorage.setItem("gameanswer_3", "0");
+	window.localStorage.setItem("gameanswer_4", "0");
+	window.localStorage.setItem("gameanswer_5", "0");
+
+	window.localStorage.setItem("gamescan_1", "0");
+	window.localStorage.setItem("gamescan_2", "0");
+	window.localStorage.setItem("gamescan_3", "0");
+	window.localStorage.setItem("gamescan_4", "0");
+	window.localStorage.setItem("gamescan_5", "0");
+
+	if(daynow === 'Mon' || daynow === 'Wed' || daynow === 'Thu'){
+		window.localStorage.setItem("gameinsession", "1");
+	}else{
+		window.localStorage.setItem("gameinsession", "0");
+	}
+	this.firstRunner();
+	window.localStorage.setItem("firstrun", false);	
+}
+
+
+var getClue = function(){
+	console.log('get game clue');
+	whichdate = new Date();
+	whichhour = whichdate.getHours();
+	whichmin = whichdate.getMinutes();
+
+	if(window.localStorage.getItem("gamestate") === "tsearch"){
+		games = tsgames;
+		for(var i = 0; i < games.length; i++){
+			console.log(i);
+			if(i === (games.length - 1)){
+				if( games[i].min <= whichmin && parseInt(games[i].hour) == whichhour && games[i].day == daynow ){
+					window.localStorage.setItem("gamecluecurrent", games[i].clue);
+					window.localStorage.setItem("gameanswercurrent", games[i].answer);
+				}
+			}else{
+				if( games[i].min <= whichmin && games[i + 1].min > whichmin && parseInt(games[i].hour) >= whichhour && games[i].day == daynow ){
+					nextclue = games[i];
+					//console.log(whichhour);
+					//console.log(whichmin);
+					//console.log(todate);
+					console.log(nextclue);
+					$('.cluebar').html(games[i].clue);
+					window.localStorage.setItem("gamecluecurrent", games[i].clue);
+					window.localStorage.setItem("gameanswercurrent", games[i].answer);
+				}									
+			}
+		}
+	}else if(window.localStorage.getItem("gamestate") === "logo"){
+		games = lsgames;
+
+		var idx = Math.floor((Math.random()*30)+1);
+
+		console.log(idx);
+
+		$('.cluebar').html('<img src="logos/' + games[idx].url + '" />');
+		window.localStorage.setItem("gamecluecurrent", games[idx].url);
+		window.localStorage.setItem("gameanswercurrent", games[idx].answer);
+	}
+}
+
+var nextclue = null;
+
+var insession = window.localStorage.getItem("gameinsession");
+
+if(insession == 1){
+	if(window.localStorage.getItem("gamestate") === "tsearch"){
+		setInterval(function(){
+			console.log('interval running');
+			whichdate = new Date();
+			whichhour = whichdate.getHours();
+			whichmin = whichdate.getMinutes();
+
+				console.log(whichhour);
+				console.log(whichmin);
+				console.log(daynow);
+
+			games = tsgames;
+
+			for(var i = 0; i < games.length; i++){
+				console.log(i);
+				if(i === (games.length - 1)){
+					if( games[i].min <= whichmin && parseInt(games[i].hour) == whichhour && games[i].day == daynow ){
+						window.localStorage.setItem("gamecluecurrent", games[i].clue);
+						window.localStorage.setItem("gameanswercurrent", games[i].answer);
+					}
+				}else{
+					if( games[i].min <= whichmin && games[i + 1].min > whichmin && parseInt(games[i].hour) >= whichhour && games[i].day == daynow ){
+						nextclue = games[i];
+						//console.log(whichhour);
+						//console.log(whichmin);
+						//console.log(todate);
+						console.log(nextclue);
+						$('.cluebar').html(games[i].clue);
+						window.localStorage.setItem("gamecluecurrent", games[i].clue);
+						window.localStorage.setItem("gameanswercurrent", games[i].answer);
+					}									
+				}
+			}
+
+		},10000);
+	}
 
 }
+
+
+
+
+
 
 var gs = window.localStorage.getItem("gamestate"); // gamestate
 
@@ -81,6 +340,8 @@ var kApp = function () {
 
     /*Initialize.*/
     function init() {
+		getCurrentLogo();
+		getCurrentScan();
 		return true;
     }
 
@@ -103,14 +364,14 @@ var kApp = function () {
 	var whatdata = new Array();
 	var whatlist = new joList(whatdata).attach(document.body);
 	whatlist.formatItem = function(data, index) {
-		console.log(data.title);
+		//console.log(data.title);
 		return joList.prototype.formatItem.call(this, data.title, index);
 	};
 
 	var promodata = new Array();
 	var promolist = new joList(promodata).attach(document.body);
 	promolist.formatItem = function(data, index) {
-		console.log(data.title);
+		//console.log(data.title);
 		return joList.prototype.formatItem.call(this, data.title, index);
 	};
       
@@ -146,6 +407,13 @@ var kApp = function () {
 		new joHTML('Sorry, your key is invalid'),
 		new joDivider(),	 
 		closebutton = new joButton('Close'),
+	];
+
+	popCard = [
+		popTitle = new joTitle('Correct Answer'),
+		popBody = new joHTML('Now you may scan the QR code at the store.'),
+		new joDivider(),	 
+		popclosebutton = new joButton('Close'),
 	];
 
     loader = [new joHTML('Loading...')];
@@ -216,6 +484,16 @@ var kApp = function () {
 		])
     ]).setTitle('Games');
 
+    redeemCard = new joCard([
+		new joGroup([
+		    new joLabel("<strong>Redeem</strong>"),
+	    	new joFlexrow(
+	    		redeemKey = new joInput()
+	    		),
+		    redeembutton = new joButton('Redeem'),	
+		])
+    ]).setTitle('Games');
+
 
     gameChoiceCard = new joCard([
 		new joTitle('Select your Game'),
@@ -226,9 +504,9 @@ var kApp = function () {
 		])
     ]).setTitle('Choose Game');
 
-    var gamebar = '<div id="gamebar"><span id="1" class="active">1</span><span id="2">2</span><span id="3">3</span><span id="4">4</span><span id="5">5</span></div>';
+    var gamebar = '<div id="gamebar"><span id="1" >1</span><span id="2">2</span><span id="3">3</span><span id="4">4</span><span id="5">5</span></div>';
 
-    var cluebar = '<div class="cluebar">Watch me for the next clue !</div>';
+    var cluebar = '<div class="cluebar">Click Get Clue button to start the game</div>';
 
     tsearchCard = new joCard([
     	new joGroup([
@@ -236,6 +514,7 @@ var kApp = function () {
 	    	new joDivider(),
 		    tcluebar = new joHTML(cluebar),
 	    	new joDivider(),
+			tsgetcluebutton = new joButton('Get Clue'),
 			tscanbutton = new joButton('Scan Now')
     	])
     ]).setTitle('K Code');
@@ -246,6 +525,12 @@ var kApp = function () {
 	    	new joDivider(),
 		    lcluebar = new joHTML(cluebar),
 	    	new joDivider(),
+	    	new joLabel('What is the store name ?'),
+	    	new joFlexrow([
+				answerfield = new joInput(""),
+				lsanswerbutton = new joButton('Answer')
+    		]),
+			lsgetcluebutton = new joButton('Get Clue'),
 			lscanbutton = new joButton('Scan Now')
     	])
     ]).setTitle('Store Hopping');
@@ -253,6 +538,11 @@ var kApp = function () {
     listCard = new joCard([
 		new joTitle('List Page'),
 		datastring = new joHTML('This is a demonstration of some of the customization you can do with the Jo JavaScript framework. This demo displays some iOS-style touches such as a tab bar for navigation, a notification badge on the tab icon, and an action-sheet dialog.'),
+    ]);
+
+    thankCard = new joCard([
+		new joTitle('Thank You'),
+		datastring = new joHTML("Thank you for participating in Kuningan City Game, it's been great fun having you playing with us!"),
     ]);
 
 	var scard = function(data){
@@ -267,7 +557,7 @@ var kApp = function () {
 		).setTitle(data.title);
     }
 
-    /*Button events.*/
+   /*Button events.*/
      
     /*Set badge text.*/
     badgebutton.selectEvent.subscribe(function() { 
@@ -278,11 +568,11 @@ var kApp = function () {
 	})
 
     tscanbutton.selectEvent.subscribe(function() { 
-    	scan();
+    	tsearchScan();
 	})
 
     lscanbutton.selectEvent.subscribe(function() { 
-    	scan();
+    	logoScan();
 	})
 
   /*Send text via e-mail.*/
@@ -299,6 +589,10 @@ var kApp = function () {
  	closebutton.selectEvent.subscribe(function() { 
 	 	scn.hidePopup(slideCard);
 	 	menu.refresh();	 
+	})
+
+	popclosebutton.selectEvent.subscribe(function() { 
+	 	scn.hidePopup(popCard);
 	})
 
 	whatbutton.selectEvent.subscribe(function(){
@@ -342,16 +636,48 @@ var kApp = function () {
 		stack.push(logoCard);
 	})
 
+	tsgetcluebutton.selectEvent.subscribe(function(){
+		getClue();
+	})
+
+	lsgetcluebutton.selectEvent.subscribe(function(){
+		getClue();
+	})
+
+	lsanswerbutton.selectEvent.subscribe(function(){
+		var answer = answerfield.getData();
+		console.log(answer);
+		putAnswer(answer);
+	})
+
 	validatebutton.selectEvent.subscribe(function(){
 		active = "games";
-		joFocus.set(this.input);
-		if(gamekey.getData() === getGameKey()){
+
+		var validateVal = gamekey.getData();
+
+		if(doRedeem(validateVal)){
+			window.localStorage.setItem('gamevalidation',validateVal);
 			gs = setGameState('choice');
 			stack.push(gameChoiceCard);
 		}else{
 			scn.showPopup(invalidCard);
 		}
 	})
+
+	redeembutton.selectEvent.subscribe(function(){
+		active = "games";
+
+		var redeemVal = redeemKey.getData();
+
+		if(doRedeem(redeemVal)){
+			window.localStorage.setItem('redeemvalidation',redeemVal);
+			gs = setGameState('final');
+			stack.push(thankCard);
+		}else{
+			scn.showPopup(invalidCard);
+		}
+	})
+
       
     // list event
 
@@ -403,6 +729,220 @@ var kApp = function () {
     });
   	*/
 
+  	var doRedeem = function(redeemkey){
+  		var result = false;
+  		for(var i = 0; i < gamecodes.length;i++){
+  			if(redeemkey === gamecodes[i]){
+  				result = true;
+  			}
+  		}
+  		return result;
+  	}
+
+  	var getCurrentScan = function(){
+		if(window.localStorage.getItem("gamestate") == 'tsearch'){
+			console.log('get default scan');
+			var step = window.localStorage.getItem("gamestep");
+
+			if(parseInt(window.localStorage.getItem("gamecluecurrent")) === 0){
+
+			}else{
+				$('.cluebar').html(window.localStorage.getItem("gamecluecurrent"));
+			}
+
+			for(var i = 1; i < 6; i++ ){
+				if(parseInt(window.localStorage.getItem("gamescan_" + i)) > 0){
+					$('#gamebar #' + i).addClass('active');
+				}
+			}
+		}	
+  	}
+
+	var getCurrentLogo = function(){
+		if(window.localStorage.getItem("gamestate") == 'logo'){
+			console.log('get default logo');
+			var step = window.localStorage.getItem("gamestep");
+			$('.cluebar').html('<img src="logos/' + window.localStorage.getItem("gamecluecurrent") + '" />');
+			if(step === 0){
+			}else{
+				console.log(step);
+				var gscan = window.localStorage.getItem("gamescan_" + step);
+				console.log(gscan);
+				if(parseInt(gscan) === 0){
+					console.log('disable get clue');
+					answerfield.disable();
+					lsanswerbutton.disable();
+					lsgetcluebutton.disable();
+				}
+			}
+
+			for(var i = 1; i < 6; i++ ){
+				if(parseInt(window.localStorage.getItem("gamescan_" + i)) > 0){
+					$('#gamebar #' + i).addClass('active');
+				}
+			}
+		}	
+	}
+
+	var putAnswer = function(answer){
+		if(window.localStorage.getItem("gamestate") === "tsearch"){
+			games = tsgames;
+			for(var i = 0;i < games.length; i++){
+				if(parseInt(games[i].min) <= whichmin && parseInt(games[i + 1].min) > whichmin && parseInt(games[i].hour) == whichhour){
+					nextclue = games[i];
+					console.log(whichhour);
+					console.log(whichmin);
+					console.log(todate);
+					console.log(nextclue);
+					$('.cluebar').html(games[i].clue);
+					window.localStorage.setItem("gamecluecurrent", games[i].clue);
+					window.localStorage.setItem("gameanswercurrent", games[i].answer);
+				}
+			}
+		}else if(window.localStorage.getItem("gamestate") === "logo"){
+
+			var ans  = answer.split(" ").join("").toLowerCase();
+			console.log(ans);
+
+			var currans = window.localStorage.getItem("gameanswercurrent");
+			currans = currans.split(" ").join("").toLowerCase();
+
+			console.log(currans);
+
+			if(currans === ans){
+				popTitle.setData('Correct Answer');
+				popBody.setData('Now go the store and scan the QR code');
+				scn.showPopup(popCard);
+				var step = window.localStorage.getItem("gamestep");
+				step = parseInt(step) + 1;
+				console.log(step);
+				window.localStorage.setItem("gamestep", step);
+				window.localStorage.setItem("gameanswer_"+step, currans);
+				answerfield.disable();
+				lsanswerbutton.disable();
+				lsgetcluebutton.disable();
+			}else{
+				popTitle.setData('Wrong Answer');
+				popBody.setData('Please try again');
+				scn.showPopup(popCard);				
+			}
+
+			//window.localStorage.setItem("gamestep", );
+		}	
+	}
+
+	var logoScan = function(){
+		
+	    window.plugins.barcodeScanner.scan( function(result) {
+	        
+
+			var step = window.localStorage.getItem("gamestep");
+
+			var curr_answer = window.localStorage.getItem("gameanswer_"+step);
+
+			var scan_text = result.text.split(" ").join("").toLowerCase();
+			
+			if(curr_answer === scan_text){
+				window.localStorage.setItem("gamescan_"+step, 1);
+
+				if(parseInt(step) === 5){
+					answerfield.disable();
+					answerfield.setData("");
+					lsanswerbutton.disable();
+					lsgetcluebutton.disable();
+					gs = setGameState('redeem');
+					stack.push(redeemCard);
+				}else{
+					$('#gamebar #' + step).addClass('active');
+					answerfield.enable();
+					answerfield.setData("");
+					lsanswerbutton.enable();
+					lsgetcluebutton.enable();
+					getClue();
+				}				
+			}
+
+	    }, function(error) {
+	        alert("Scan Cancelled");
+	    });
+
+
+	}
+
+	var tsearchScan = function(){
+
+		window.plugins.barcodeScanner.scan(function(result){
+
+			var scan_text = result.text.split(" ").join("").toLowerCase();
+
+	        var step = window.localStorage.getItem("gamestep");
+
+	        var curr_ans = window.localStorage.getItem("gameanswercurrent");
+
+	        var curr_ans_ts = curr_ans.split(" ").join("").toLowerCase();
+
+
+	        if(curr_ans_ts === scan_text){
+				step = parseInt(step) + 1;
+				console.log(step);
+				window.localStorage.setItem("gamestep", step);
+				window.localStorage.setItem("gamescan_" + step, 1);
+
+				if(parseInt(step) === 5){
+					tsgetcluebutton.disable();
+					gs = setGameState('redeem');
+					stack.push(redeemCard);
+				}else{
+					$('#gamebar #' + step).addClass('active');
+					popTitle.setData('Correct Answer');
+					popBody.setData('Now wait for another clue');
+					scn.showPopup(popCard);					
+				}				
+			}
+
+		},function(error){
+
+			alert(error);
+
+		});
+
+	    /*
+	    window.plugins.barcodeScanner.scan( function(result) {
+	        
+			var step = window.localStorage.getItem("gamestep");
+
+			var curr_answer = window.localStorage.getItem("gameanswercurrent");
+
+			curr_answer = curr_answer.text.split(" ").join("").toLowerCase();
+
+			var scan_text = result.text.split(" ").join("").toLowerCase();
+
+	        alert("Result : " + scan_text);
+			
+			if(curr_answer === scan_text){
+				window.localStorage.setItem("gamescan_"+step, 1);
+				step = parseInt(step) + 1;
+				console.log(step);
+				window.localStorage.setItem("gamestep", step);
+
+				if(parseInt(step) === 5){
+					tsgetcluebutton.disable();
+					gs = setGameState('redeem');
+					stack.push(redeemCard);
+				}else{
+					$('#gamebar #' + step).addClass('active');
+				}				
+			}
+
+	    }, function(error) {
+	        alert("Scan failed : " + error);
+	    });
+
+	    */
+
+
+	}
+
     // Set the functionality of the menu 
     menu.selectEvent.subscribe(function(id) {
 		if (id == 0) {
@@ -423,9 +963,26 @@ var kApp = function () {
 			}else if(gs === "choice"){
 				stack.push(gameChoiceCard);
 			}else if(gs === "tsearch"){
-				stack.push(tsearchCard);
+				if(parseInt(step) === 5){
+					stack.push(redeemCard);
+				}else{
+					stack.push(tsearchCard);
+					getCurrentScan();					
+				}
 			}else if(gs === "logo"){
-				stack.push(logoCard);
+				var step = window.localStorage.getItem("gamestep");
+
+				if(parseInt(step) === 5){
+					stack.push(redeemCard);
+				}else{
+					stack.push(logoCard);
+					getCurrentLogo();					
+				}
+
+			}else if(gs === "redeem"){
+				stack.push(redeemCard);				
+			}else if(gs === "final"){
+				stack.push(thankCard);								
 			}
 		} //if
 
@@ -501,100 +1058,6 @@ var kApp = function () {
 	
 	//joGesture.backEvent.subscribe(stack.pop, stack); 
 
+	init();
+
 };
-			
-var remoteBaseUrl = "http://www.kickstartlab.com/kcity/index.php";
-
-var firstRunner = function(){
-	db.transaction(populateDB, errorCB, fillDirectory);
-	fillUpdates();
-	window.localStorage.setItem("firstrun", false);
-}
-
-var fillDirectory = function(){
-	$.jsonp({
-        url: remoteBaseUrl + '?s=dir',
-        callbackParameter: 'callback',
-        timeout: 25000,
-        success: function(data, status) {
-        	db.transaction(function(tx){
-        		for(i = 0; i < data.length; i++){
-					//console.log(data[i]);
-					tx.executeSql('INSERT INTO SHOPS (id, category, description, floor,sid,location,phone, shopname,t) VALUES ("' + data[i].id +
-										'","' + data[i].category + 
-										'","' + data[i].description + 
-										'","' + data[i].floor +
-										'","' + data[i].id +
-										'","' + data[i].location +
-										'","' + data[i].phone +
-										'","' + data[i].shopname +
-										'","' + data[i].t + '")');
-        		}
-        	}, errorCB, successCB);
-        },
-        error: function(){
-        	console.log('jsonp error');     
-        }
-    });	
-}
-
-var fillUpdates = function(){
-	$.jsonp({
-        url: remoteBaseUrl + '?s=news',
-        callbackParameter: 'callback',
-        timeout: 25000,
-        success: function(data, status) {
-        	db.transaction(function(tx){
-        		for(i = 0; i < data.length; i++){
-					console.log(data[i]);
-					tx.executeSql('INSERT INTO NEWS (id, sid, t, title, short, body, section, is_head) VALUES ("' + data[i].id +
-										'","' + data[i].id + 
-										'","' + data[i].t + 
-										'","' + data[i].title +
-										'","' + data[i].short +
-										'","' + data[i].body +
-										'","' + data[i].section +
-										'","' + data[i].is_head + '")');
-        		}
-        	}, errorCB, successCB);
-        },
-        error: function(){
-        	console.log('jsonp error');     
-        }
-    });	
-}
-
-var populateDB = function(tx) {	
-	tx.executeSql('DROP TABLE IF EXISTS DEMO');
-
-	tx.executeSql('DROP TABLE IF EXISTS DEMO');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
-	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
-	tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
-
-	tx.executeSql('DROP TABLE IF EXISTS SHOPS');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS SHOPS (id unique, category, description, floor,sid,location,phone, shopname,t)');
-
-	tx.executeSql('DROP TABLE IF EXISTS NEWS');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS NEWS (id unique, sid, t, title, short, body, section, is_head)');
-
-	tx.executeSql('DROP TABLE IF EXISTS GAMES');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS GAMES (id unique, sid, t, title, short, body, section, is_head)');
-
-}
-
-var errorCB = function(tx, err) {
-    console.log("Error processing SQL: "+err);
-}
-
-// Transaction success callback
-//
-var successCB = function() {
-    console.log("success!");
-}
-
-
-
-
-
-
