@@ -437,6 +437,8 @@ var kApp = function () {
     directoryCard = new joCard([
 			new joContainer([
 				new joFlexrow([
+					searchinput = new joInput(""),
+					searchbutton = new joButton('Search'),
 					dirrefreshbutton = new joButton('Refresh'),
 				]),
 			]).setStyle({
@@ -617,6 +619,11 @@ var kApp = function () {
 
 	dirrefreshbutton.selectEvent.subscribe(function(){
 		getdirectory();
+	})
+
+	searchbutton.selectEvent.subscribe(function(){
+		var keyword = searchinput.getData();
+		searchdirectory(keyword);
 	})
 
 	aboutbutton.selectEvent.subscribe(function(){
@@ -906,41 +913,6 @@ var kApp = function () {
 
 		});
 
-	    /*
-	    window.plugins.barcodeScanner.scan( function(result) {
-	        
-			var step = window.localStorage.getItem("gamestep");
-
-			var curr_answer = window.localStorage.getItem("gameanswercurrent");
-
-			curr_answer = curr_answer.text.split(" ").join("").toLowerCase();
-
-			var scan_text = result.text.split(" ").join("").toLowerCase();
-
-	        alert("Result : " + scan_text);
-			
-			if(curr_answer === scan_text){
-				window.localStorage.setItem("gamescan_"+step, 1);
-				step = parseInt(step) + 1;
-				console.log(step);
-				window.localStorage.setItem("gamestep", step);
-
-				if(parseInt(step) === 5){
-					tsgetcluebutton.disable();
-					gs = setGameState('redeem');
-					stack.push(redeemCard);
-				}else{
-					$('#gamebar #' + step).addClass('active');
-				}				
-			}
-
-	    }, function(error) {
-	        alert("Scan failed : " + error);
-	    });
-
-	    */
-
-
 	}
 
     // Set the functionality of the menu 
@@ -1043,6 +1015,13 @@ var kApp = function () {
 
 	var getdirectory = function(){
 		query = "SELECT * FROM SHOPS";
+		db.transaction(function(tx){
+			tx.executeSql(query, [],directoryQuerySuccess,errorCB);
+		},errorCB);
+	}
+
+	var searchdirectory = function(keyword){
+		query = "SELECT * FROM SHOPS WHERE SHOPNAME LIKE '%"+keyword+"%' OR DESCRIPTION LIKE '%" + keyword+ "%' OR CATEGORY LIKE '%" + keyword + "%' ";
 		db.transaction(function(tx){
 			tx.executeSql(query, [],directoryQuerySuccess,errorCB);
 		},errorCB);
