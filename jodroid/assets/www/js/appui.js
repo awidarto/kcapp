@@ -65,6 +65,7 @@ var fillDirectory = function(){
     });	
 }
 
+
 var fillUpdates = function(){
 
 
@@ -375,7 +376,7 @@ var kApp = function () {
 	var dirdata = new Array();
 	var dirlist = new joList(dirdata).attach(document.body);
 	dirlist.formatItem = function(data, index) {
-		console.log(data.title);
+		//console.log(data.title);
 		var item = new joHTML('<div index="' + index + '">'+data.shopname+'<i>'+data.phone+'</i></div>');
 		//return joList.prototype.formatItem.call(this, data.shopname, index);
 		return item;
@@ -625,7 +626,7 @@ var kApp = function () {
 	})
 
 	whatsonrefreshbutton.selectEvent.subscribe(function(){
-		getwhatson();
+		refreshNews(getwhatson, "What's On");
 	})
 
 	promobutton.selectEvent.subscribe(function(){
@@ -635,11 +636,13 @@ var kApp = function () {
 	})
 
 	promorefreshbutton.selectEvent.subscribe(function(){
-		getpromo();
+		refreshNews(getpromo,'Promotions');
+		//getpromo();
 	})
 
 	dirrefreshbutton.selectEvent.subscribe(function(){
-		getdirectory();
+		refreshDirectory();
+		//getdirectory();
 	})
 
 	searchbutton.selectEvent.subscribe(function(){
@@ -731,6 +734,7 @@ var kApp = function () {
 			container = new joContainer([
 				nav = new joNavbar('Home'),
 				maincontainer =  new joFlexcol([
+
 					stack = new joStackScroller()
 				]),
 
@@ -1002,6 +1006,7 @@ var kApp = function () {
 	}
 
 	var getwhatson = function(){
+		console.log('repopulate whatson');
 		query = "SELECT * FROM NEWS WHERE SECTION = 'whatson'";
 		db.transaction(function(tx){
 			tx.executeSql(query, [],whatQuerySuccess,errorCB);
@@ -1020,6 +1025,7 @@ var kApp = function () {
 	}
 
 	var getpromo = function(){
+		console.log('repopulate promo');
 		query = "SELECT * FROM NEWS WHERE SECTION = 'promo'";
 		db.transaction(function(tx){
 			tx.executeSql(query, [],promoQuerySuccess,errorCB);
@@ -1034,15 +1040,17 @@ var kApp = function () {
 		promolist.refresh();
 	}
 
-	var getdirectory = function(){
-		query = "SELECT * FROM SHOPS";
+
+	var searchdirectory = function(keyword){
+		query = "SELECT * FROM SHOPS WHERE SHOPNAME LIKE '%"+keyword+"%' OR DESCRIPTION LIKE '%" + keyword+ "%' OR CATEGORY LIKE '%" + keyword + "%' ";
 		db.transaction(function(tx){
 			tx.executeSql(query, [],directoryQuerySuccess,errorCB);
 		},errorCB);
 	}
 
-	var searchdirectory = function(keyword){
-		query = "SELECT * FROM SHOPS WHERE SHOPNAME LIKE '%"+keyword+"%' OR DESCRIPTION LIKE '%" + keyword+ "%' OR CATEGORY LIKE '%" + keyword + "%' ";
+	var getdirectory = function(){
+		console.log('repopulate');
+		query = "SELECT * FROM SHOPS";
 		db.transaction(function(tx){
 			tx.executeSql(query, [],directoryQuerySuccess,errorCB);
 		},errorCB);
@@ -1055,6 +1063,85 @@ var kApp = function () {
 		}
 		dirlist.refresh();
 	}
+
+	var refreshDirectory = function(){
+
+		if(lastupdate = window.localStorage.getItem('dirlastupdate')){
+			var thisupdate = new Date().getTime();
+			window.localStorage.setItem('dirlastupdate',thisupdate);		
+		}else{
+			var lastupdate = new Date().getTime();
+			window.localStorage.setItem('dirlastupdate',lastupdate);		
+		}
+
+		nav.setTitle('Loading...');
+
+		$.jsonp({
+	        url: remoteBaseUrl + '?s=dir&l=' + lastupdate,
+	        callbackParameter: 'callback',
+	        timeout: 25000,
+	        success: function(data, status) {
+				nav.setTitle('Directory');
+	        	db.transaction(function(tx){
+	        		for(i = 0; i < data.length; i++){
+						//console.log(data[i]);
+						tx.executeSql('INSERT INTO SHOPS (id, category, description, floor,sid,location,phone, shopname,t) VALUES ("' + data[i].id +
+											'","' + data[i].category + 
+											'","' + data[i].description + 
+											'","' + data[i].floor +
+											'","' + data[i].id +
+											'","' + data[i].location +
+											'","' + data[i].phone +
+											'","' + data[i].shopname +
+											'","' + data[i].t + '")');
+	        		}
+	        	}, errorCB, getdirectory);
+	        },
+	        error: function(){
+	        	//console.log('jsonp error');     
+	        }
+	    });	
+	}
+
+	var refreshNews = function(pagecallback, title){
+
+
+		if(lastupdate = window.localStorage.getItem('newslastupdate')){
+			var thisupdate = new Date().getTime();
+			window.localStorage.setItem('newslastupdate',thisupdate);		
+		}else{
+			var lastupdate = new Date().getTime();
+			window.localStorage.setItem('newslastupdate',lastupdate);		
+		}
+
+		nav.setTitle('Loading...');
+
+		$.jsonp({
+	        url: remoteBaseUrl + '?s=news&l=' + lastupdate,
+	        callbackParameter: 'callback',
+	        timeout: 25000,
+	        success: function(data, status) {
+				nav.setTitle(title);
+	        	db.transaction(function(tx){
+	        		for(i = 0; i < data.length; i++){
+						//console.log(data[i]);
+						tx.executeSql('INSERT INTO NEWS (id, sid, t, title, short, body, section, is_head) VALUES ("' + data[i].id +
+											'","' + data[i].id + 
+											'","' + data[i].t + 
+											'","' + data[i].title +
+											'","' + data[i].short +
+											'","' + data[i].body +
+											'","' + data[i].section +
+											'","' + data[i].is_head + '")');
+	        		}
+	        	}, errorCB, pagecallback);
+	        },
+	        error: function(){
+	        	//console.log('jsonp error');     
+	        }
+	    });	
+	}
+
 	
 	//joGesture.backEvent.subscribe(stack.pop, stack); 
 
