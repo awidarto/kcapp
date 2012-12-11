@@ -30,8 +30,17 @@ var firstRunner = function(){
 }
 
 var fillDirectory = function(){
+
+	if(lastupdate = window.localStorage.getItem('dirlastupdate')){
+		var thisupdate = new Date().getTime();
+		window.localStorage.setItem('dirlastupdate',thisupdate);		
+	}else{
+		var lastupdate = new Date().getTime();
+		window.localStorage.setItem('dirlastupdate',lastupdate);		
+	}
+
 	$.jsonp({
-        url: remoteBaseUrl + '?s=dir',
+        url: remoteBaseUrl + '?s=dir&l=' + lastupdate,
         callbackParameter: 'callback',
         timeout: 25000,
         success: function(data, status) {
@@ -57,8 +66,18 @@ var fillDirectory = function(){
 }
 
 var fillUpdates = function(){
+
+
+	if(lastupdate = window.localStorage.getItem('newslastupdate')){
+		var thisupdate = new Date().getTime();
+		window.localStorage.setItem('newslastupdate',thisupdate);		
+	}else{
+		var lastupdate = new Date().getTime();
+		window.localStorage.setItem('newslastupdate',lastupdate);		
+	}
+
 	$.jsonp({
-        url: remoteBaseUrl + '?s=news',
+        url: remoteBaseUrl + '?s=news&l=' + lastupdate,
         callbackParameter: 'callback',
         timeout: 25000,
         success: function(data, status) {
@@ -357,7 +376,9 @@ var kApp = function () {
 	var dirlist = new joList(dirdata).attach(document.body);
 	dirlist.formatItem = function(data, index) {
 		console.log(data.title);
-		return joList.prototype.formatItem.call(this, data.shopname, index);
+		var item = new joHTML('<div index="' + index + '">'+data.shopname+'<i>'+data.phone+'</i></div>');
+		//return joList.prototype.formatItem.call(this, data.shopname, index);
+		return item;
 	};
 
 	// whatson initial list
