@@ -173,6 +173,7 @@ if(firstRun = window.localStorage.getItem("firstrun")){
 		window.localStorage.setItem("gamescan_3", "0");
 		window.localStorage.setItem("gamescan_4", "0");
 		window.localStorage.setItem("gamescan_5", "0");
+		window.localStorage.setItem("gamecount","0");
 
 		if(daynow === 'Mon' || daynow === 'Wed' || daynow === 'Thu'){
 			window.localStorage.setItem("gameinsession", "1");
@@ -567,6 +568,7 @@ var kApp = function () {
     thankCard = new joCard([
 		new joTitle('Thank You'),
 		datastring = new joHTML("Thank you for participating in Kuningan City Game, it's been great fun having you playing with us!"),
+		playagainbutton =  new joButton('Play Again')
     ]);
 
 	var scard = function(data){
@@ -709,6 +711,15 @@ var kApp = function () {
 		}
 	})
 
+	playagainbutton.selectEvent.subscribe(function(){
+		active = "games";
+
+		if(playagain()){
+			stack.push(gamesCard);
+		}else{
+			scn.showPopup(invalidCard);			
+		}
+	})
       
     // list event
 
@@ -765,6 +776,9 @@ var kApp = function () {
   		var result = false;
   		for(var i = 0; i < gamecodes.length;i++){
   			if(redeemkey === gamecodes[i]){
+				var count = window.localStorage.getItem("gamecount");
+				count = parseInt(count) + 1;
+				window.localStorage.setItem("gamecount",count);
   				result = true;
   			}
   		}
@@ -1143,6 +1157,39 @@ var kApp = function () {
 	        	//console.log('jsonp error');     
 	        }
 	    });	
+	}
+
+	var playagain = function(){
+		var gamestate = window.localStorage.getItem('gamestate');		
+
+		if(gamestate == 'final'){
+			window.localStorage.setItem("gamestate", "main");
+			window.localStorage.setItem("gamekey", "123456789");
+			window.localStorage.setItem("gamecluecurrent", "0");
+			window.localStorage.setItem("gameanswercurrent", "0");
+
+			window.localStorage.setItem("gamestep", 0);
+			window.localStorage.setItem("gameanswer_1", "0");
+			window.localStorage.setItem("gameanswer_2", "0");
+			window.localStorage.setItem("gameanswer_3", "0");
+			window.localStorage.setItem("gameanswer_4", "0");
+			window.localStorage.setItem("gameanswer_5", "0");
+
+			window.localStorage.setItem("gamescan_1", "0");
+			window.localStorage.setItem("gamescan_2", "0");
+			window.localStorage.setItem("gamescan_3", "0");
+			window.localStorage.setItem("gamescan_4", "0");
+			window.localStorage.setItem("gamescan_5", "0");
+
+			var count = window.localStorage.getItem("gamecount");
+			count = parseInt(count) + 1;
+
+			window.localStorage.setItem("gamecount",count);
+
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	
