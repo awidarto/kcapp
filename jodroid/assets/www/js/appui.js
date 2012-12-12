@@ -1082,7 +1082,9 @@ var kApp = function () {
 	        timeout: 25000,
 	        success: function(data, status) {
 				nav.setTitle('Directory');
+
 	        	db.transaction(function(tx){
+					tx.executeSql('DELETE FROM SHOPS');
 	        		for(i = 0; i < data.length; i++){
 						//console.log(data[i]);
 						tx.executeSql('INSERT INTO SHOPS (id, category, description, floor,sid,location,phone, shopname,t) VALUES ("' + data[i].id +
@@ -1123,6 +1125,7 @@ var kApp = function () {
 	        success: function(data, status) {
 				nav.setTitle(title);
 	        	db.transaction(function(tx){
+					tx.executeSql('DELETE FROM NEWS');
 	        		for(i = 0; i < data.length; i++){
 						//console.log(data[i]);
 						tx.executeSql('INSERT INTO NEWS (id, sid, t, title, short, body, section, is_head) VALUES ("' + data[i].id +
